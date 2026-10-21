@@ -48,7 +48,7 @@ export default function AppointmentBooking() {
     <main className="relative min-h-screen px-4 py-16 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-6xl space-y-16">
         <section className="text-center space-y-4 max-w-2xl mx-auto">
-          <h1 className="font-bold text-2xl md:text-4xl leading-relaxed tracking-wider">
+          <h1 className="text-2xl md:text-4xl leading-relaxed tracking-wider">
             Reserve your consultation
           </h1>
           <p className="text-stone-500 text-sm sm:text-base leading-relaxed">

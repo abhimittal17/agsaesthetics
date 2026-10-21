@@ -79,7 +79,7 @@ export default function Faqs() {
         <p className="text-sm uppercase tracking-widest text-stone-500 font-medium">
           FAQ
         </p>
-        <h1 className="font-bold text-2xl md:text-4xl md:leading-relaxed tracking-wider">
+        <h1 className="text-2xl md:text-4xl md:leading-relaxed tracking-wider">
           Frequently Asked Questions
         </h1>
       </div>
@@ -94,7 +94,7 @@ export default function Faqs() {
               >
                 <details className="group p-5">
                   <summary className="list-none cursor-pointer flex justify-between items-center select-none">
-                    <h3 className="font-medium text-stone-900 text-base md:text-lg pr-4">
+                    <h3 className="text-sm text-stone-900 pr-4">
                       {faq.question}
                     </h3>
                     <div className="ml-4 shrink-0">

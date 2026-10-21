@@ -48,7 +48,7 @@ function AppSidebar() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <Sidebar className="border-r border-olive-400/20 bg-olive-500 text-stone-100">
+    <Sidebar className="border-r border-olive-400/20 bg-[#586454] text-stone-100">
       <SidebarHeader className="border-b border-white/15 p-6">
         <div className="flex items-center justify-between">
           <Link
@@ -265,7 +265,7 @@ function DesktopNavbar() {
                             key={treatment.href}
                             href={treatment.href}
                             className={`group flex items-center justify-between rounded-2xl px-3.5 py-2.5 transition-all ${isCurrent
-                                ? "bg-olive-500 text-white font-medium"
+                                ? "bg-[#586454] text-white font-medium"
                                 : "text-stone-700 hover:bg-stone-100 hover:text-stone-950"
                               }`}
                           >
@@ -312,7 +312,7 @@ function DesktopNavbar() {
                             key={item.href}
                             href={item.href}
                             className={`group flex items-center justify-between rounded-2xl px-3.5 py-2.5 transition-all ${isCurrent
-                                ? "bg-olive-500 text-white font-medium"
+                                ? "bg-[#586454] text-white font-medium"
                                 : "text-stone-700 hover:bg-stone-100 hover:text-stone-950"
                               }`}
                           >
@@ -374,7 +374,7 @@ function MobileLayout({ children }: { children: React.ReactNode }) {
 
           <div className="flex items-center gap-2.5">
             <Link href="/appointments">
-              <button className="rounded-2xl bg-olive-500 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-olive-600">
+              <button className="rounded-2xl bg-[#586454] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-olive-600">
                 Book Now
               </button>
             </Link>

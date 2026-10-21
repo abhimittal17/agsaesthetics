@@ -36,13 +36,13 @@ export default function RefundPolicy() {
         <p className="text-sm uppercase tracking-widest text-stone-500">
           POLICIES
         </p>
-        <h1 className="font-bold text-2xl md:text-4xl leading-relaxed tracking-wider">
+        <h1 className="text-2xl md:text-4xl leading-relaxed tracking-wider">
           Cancellation &amp; Refund Policy
         </h1>
       </div>
 
       <section className="px-4 pt-10 pb-20 sm:pt-8 sm:pb-24">
-        <div className="space-y-14 text-sm md:text-lg leading-relaxed">
+        <div className="space-y-14 text-sm leading-relaxed">
           {/* Overview */}
           <div>
             <h2 className="text-xl font-semibold mb-3">1. Policy Overview</h2>

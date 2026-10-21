@@ -106,7 +106,7 @@ export default function Reviews() {
           <p className="text-sm uppercase tracking-widest text-stone-500 font-medium">
             Testimonials
           </p>
-          <h1 className="font-bold text-2xl md:text-4xl md:leading-relaxed tracking-wide">
+          <h1 className="text-2xl md:text-4xl md:leading-relaxed tracking-wide">
             What Our Patients Say
           </h1>
         </div>
