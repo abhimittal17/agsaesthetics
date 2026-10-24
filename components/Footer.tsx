@@ -21,13 +21,12 @@ export default function Footer() {
     { name: "Acne & Scars", href: "/treatments/acne-and-scars" },
     { name: "Hair Rejuvenation", href: "/treatments/hair-rejuvenation" },
     { name: "Laser Tattoo Removal", href: "/treatments/tattoo-removal" },
-    { name: "Tattoo Removal", href: "/treatments/laser-hair-removal" },
   ];
 
   const quickLinks = [
     { name: "About Us", href: "/about-us" },
     { name: "Treatment", href: "/treatments" },
-    { name: "Skin & Wellnsess Guides", href: "/blogs" },
+    { name: "Blogs", href: "/blogs" },
     { name: "Reviews", href: "/reviews" },
     { name: "FAQs", href: "/faqs" },
     { name: "Contact", href: "/contact-us" },
@@ -211,7 +210,7 @@ export default function Footer() {
             <div className="mt-4 pt-3 border-t border-white/10 text-xs text-[#CBD8C7] space-y-1">
               <div className="flex justify-between">
                 <span>Mon – Sat:</span>
-                <span className="text-white font-medium">10:00 AM – 7:30 PM</span>
+                <span className="text-white font-medium">10:00 AM – 6:00 PM</span>
               </div>
               <div className="flex justify-between">
                 <span>Sunday:</span>

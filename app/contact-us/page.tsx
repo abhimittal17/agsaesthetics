@@ -61,25 +61,25 @@ export default function AGAestheticsContact() {
   };
 
   const clinicInfo = [
+    // {
+    //   icon: <MapPin className="w-5 h-5 text-stone-700" />,
+    //   label: "Clinic Suite",
+    //   value: "1st Floor, SCO No. 6, SAI Street, Radiola Road, Kharar, Punjab 140301",
+    // },
     {
-      icon: <MapPin className="w-5 h-5 text-stone-700" />,
-      label: "Clinic Suite",
-      value: "Level 2, 120 Collins St, Melbourne VIC 3000",
-    },
-    {
-      icon: <Phone className="w-5 h-5 text-stone-700" />,
+      icon: <Phone className="w-5 h-5 text-[#586454]" />,
       label: "Direct Inquiries",
-      value: "+61 (03) 9123 4567",
+      value: "+91 96535 52999",
     },
     {
-      icon: <Mail className="w-5 h-5 text-stone-700" />,
+      icon: <Mail className="w-5 h-5 text-[#586454]" />,
       label: "Concierge Email",
-      value: "concierge@agaesthetics.com.au",
+      value: "info@agsaesthetics.com",
     },
     {
-      icon: <Clock className="w-5 h-5 text-stone-700" />,
+      icon: <Clock className="w-5 h-5 text-[#586454]" />,
       label: "Consulting Hours",
-      value: "Tue - Sat: 9:30 AM - 6:00 PM",
+      value: "10:00 AM – 6:00 PM, Mon – Sat",
     },
   ];
 
@@ -95,9 +95,9 @@ export default function AGAestheticsContact() {
         />
       </Head>
 
-      <main  className=" text-stone-900 selection:bg-stone-300 selection:text-stone-900">
+      <main  className="">
         {/* Hero Section */}
-        <section className="relative px-6 pb-12 max-w-7xl mx-auto border-b border-stone-100/80">
+        <section className="relative px-6 pb-12 max-w-7xl mx-auto">
          <div className="text-center pt-10 pb-12 space-y-2">
         <p className="text-sm uppercase tracking-widest text-stone-500 font-medium">
             Contact Us
@@ -107,20 +107,20 @@ export default function AGAestheticsContact() {
         </h1>
       </div>
           {/* Quick Contact Bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12 pt-8 border-t border-stone-100">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-8">
             {clinicInfo.map((info, idx) => (
               <div
                 key={idx}
-                className="contact-pill flex items-start gap-4 p-4 rounded-xl bg-white/70 backdrop-blur-sm border border-stone-100"
+                className="contact-pill flex items-center gap-4 p-4 rounded-xl bg-[#586454] text-white"
               >
-                <div className="p-2.5 rounded-lg bg-stone-100 shrink-0">
+                <div className="p-2.5 rounded-lg bg-white shrink-0">
                   {info.icon}
                 </div>
                 <div>
-                  <span className="block text-xs uppercase tracking-wider text-stone-500 font-medium">
+                  <span className="block text-xs uppercase tracking-wider  font-medium">
                     {info.label}
                   </span>
-                  <span className="text-sm font-normal text-stone-800 mt-0.5 block leading-snug">
+                  <span className="text-sm font-normal  mt-0.5 block leading-snug">
                     {info.value}
                   </span>
                 </div>
@@ -137,7 +137,7 @@ export default function AGAestheticsContact() {
               <div className="relative overflow-hidden rounded-3xl aspect-3/4 bg-stone-100">
                 <div ref={heroImageRef} className="absolute inset-0 w-full h-[120%] top-[-10%]">
                   <Image
-                    src="/contact.webp"
+                    src="/contact.png"
                     alt="AG Aesthetics Clinical Atmosphere"
                     fill
                     className="object-cover"
@@ -162,7 +162,7 @@ export default function AGAestheticsContact() {
             </div>
             <div
               ref={formCardRef}
-              className="lg:col-span-7 bg-white rounded-3xl p-8 md:p-12  border border-stone-100/60"
+              className="lg:col-span-7 bg-white rounded-3xl p-8 md:p-12  border border-gray-100"
             >
               <div className="border-b border-stone-100 pb-6 mb-8">
                 <span className="text-xs uppercase tracking-[0.2em] text-stone-400 font-medium">
@@ -188,8 +188,8 @@ export default function AGAestheticsContact() {
                       required
                       value={formData.fullname}
                       onChange={handleChange}
-                      placeholder="Eleanor Vance"
-                      className="w-full bg-[#FAF9F6] border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
+                      placeholder="John Doe"
+                      className="w-full bg-white border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
                     />
                   </div>
                   <div className="space-y-2">
@@ -202,8 +202,8 @@ export default function AGAestheticsContact() {
                       required
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="eleanor@example.com"
-                      className="w-full bg-[#FAF9F6] border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
+                      placeholder="john@example.com"
+                      className="w-full bg-white border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
                     />
                   </div>
                 </div>
@@ -219,8 +219,8 @@ export default function AGAestheticsContact() {
                       required
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+61 400 000 000"
-                      className="w-full bg-[#FAF9F6] border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
+                      placeholder="+91 00000 00000"
+                      className="w-full bg-white border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
                     />
                   </div>
                   <div className="space-y-2">
@@ -231,7 +231,7 @@ export default function AGAestheticsContact() {
                       name="serviceInterest"
                       value={formData.serviceInterest}
                       onChange={handleChange}
-                      className="w-full bg-[#FAF9F6] border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
+                      className="w-full bg-white border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
                     >
                       <option value="">Select Treatment Category</option>
                       <option value="facial-aesthetics">Facial Sculpting &amp; Wrinkle Reduction</option>
@@ -253,26 +253,19 @@ export default function AGAestheticsContact() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Tell us about your aesthetic goals or any treatment questions..."
-                    className="w-full bg-[#FAF9F6] border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 resize-none focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
+                    className="w-full bg-white border border-stone-100 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 resize-none focus:outline-none focus:ring-1 focus:ring-stone-600 focus:border-stone-600 transition"
                   />
                 </div>
 
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-end gap-4">
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="w-full sm:w-auto px-8 py-3.5 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs uppercase tracking-[0.2em] font-medium transition duration-300 disabled:opacity-60 flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-8 py-3.5 bg-[#586454] text-white rounded-xl text-xs uppercase tracking-[0.2em] font-medium transition duration-300 disabled:opacity-60 flex items-center justify-center gap-2"
                   >
                     {status === "loading" ? "Submitting..." : "Send Request"}
                     <ArrowUpRight className="w-4 h-4" />
                   </button>
-
-                  <Link
-                    href="/booking"
-                    className="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-stone-600 hover:text-stone-950 font-medium"
-                  >
-                    <CalendarDays className="w-4 h-4" /> Book Directly via Calendar
-                  </Link>
                 </div>
 
                 {status === "success" && (

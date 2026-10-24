@@ -2,86 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-export interface BlogPost {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  category: "Skin Treatments" | "Anti-Aging" | "Laser & Hair" | "Wellness & Care";
-  date: string;
-  readTime: string;
-  featuredImage: string;
-  featured?: boolean;
-}
-
-const BLOG_POSTS: BlogPost[] = [
-
-  {
-    id: "2",
-    slug: "pre-wedding-skincare-timeline",
-    title: "The Ultimate 6-Month Pre-Wedding Clinical Skincare Timeline",
-    excerpt:
-      "Planning for your big day? From laser hair reduction to deep chemical peels and collagen stimulation, here is your stage-by-stage countdown to radiant bridal skin.",
-    category: "Skin Treatments",
-    date: "August 20, 2026",
-    readTime: "6 min read",
-    featuredImage:
-      "https://images.unsplash.com/photo-1512290900672-1f023330ff25?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "3",
-    slug: "chemical-peels-for-indian-skin",
-    title: "Are Chemical Peels Safe for Indian Skin? Myths vs. Facts",
-    excerpt:
-      "Melanin-rich skin requires specialized peel formulations to treat hyperpigmentation and acne marks without risking post-inflammatory hyperpigmentation (PIH).",
-    category: "Skin Treatments",
-    date: "August 12, 2026",
-    readTime: "4 min read",
-
-    featuredImage:
-      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "4",
-    slug: "prp-therapy-hair-thinning-results",
-    title: "PRP for Hair Loss: How Many Sessions Do You Really Need?",
-    excerpt:
-      "Platelet-Rich Plasma (PRP) uses your body’s own growth factors to awaken dormant hair follicles. Discover who is an ideal candidate and what timeline to expect.",
-    category: "Laser & Hair",
-    date: "July 30, 2026",
-    readTime: "7 min read",
-    featuredImage:
-      "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "5",
-    slug: "anti-wrinkle-injections-preventative-botox",
-    title: "Preventative Anti-Wrinkle Treatments: When Should You Start?",
-    excerpt:
-      "From dynamic expression lines to static creases, learn why 20s and 30s are becoming the most popular ages for targeted preventative muscle relaxation therapy.",
-    category: "Anti-Aging",
-    date: "July 18, 2026",
-    readTime: "5 min read",
-    featuredImage:
-      "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "6",
-    slug: "post-treatment-aftercare-guide",
-    title: "Essential Post-Laser & Peel Aftercare Rules Every Patient Must Follow",
-    excerpt:
-      "The clinical session is only half the journey. What you apply (and avoid) in the 72 hours after laser or microneedling dictates 80% of your healing and safety.",
-    category: "Wellness & Care",
-    date: "June 29, 2026",
-    readTime: "4 min read",
-    featuredImage:
-      "https://images.unsplash.com/photo-1556760544-74068565f05c?auto=format&fit=crop&w=800&q=80",
-  },
-];
+import Image from "next/image";
+import { blogs } from "@/lib/blogs";
 
 const CATEGORIES = [
   "All",
+  "Skin Peels",
   "Skin Treatments",
   "Anti-Aging",
   "Laser & Hair",
@@ -92,28 +18,56 @@ export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const filteredPosts = blogs.filter((post) => {
     const matchesCategory =
       selectedCategory === "All" || post.category === selectedCategory;
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
-  const regularPosts = filteredPosts.filter((post) =>
-    selectedCategory === "All" && searchQuery === "" ? !post.featured : true
-  );
-
   return (
     <div>
-      <section className="pt-12 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+      <section className="pt-12 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
         <p className="text-xs uppercase tracking-wider text-stone-500 font-semibold mb-3">
           Clinical Insights &amp; Treatment Guides
         </p>
-        <h1 className="text-3xl tracking-tight text-stone-900 max-w-3xl mx-auto leading-tight">
+        <h1 className="text-3xl font-bold tracking-tight text-stone-900 max-w-3xl mx-auto leading-tight">
           Evidence-Based Aesthetic Care &amp; Skin Wellness
         </h1>
+
+        {/* Search Input */}
+        <div className="mt-8 max-w-md mx-auto relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search articles, treatments, ingredients..."
+            className="w-full px-4 py-2.5 pl-10 text-xs sm:text-sm bg-white border border-stone-200 rounded-full focus:outline-none focus:ring-2 focus:ring-stone-400 text-stone-800 placeholder-stone-400"
+          />
+          <svg
+            className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.35 4.35a7.5 7.5 0 0011.3 11.3z"
+            />
+          </svg>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs font-semibold"
+            >
+              Clear
+            </button>
+          )}
+        </div>
 
         {/* Category Pills */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
@@ -122,11 +76,12 @@ export default function BlogPage() {
             return (
               <button
                 key={cat}
+                type="button"
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 rounded-full text-xs font-medium tracking-wide transition ${
                   isActive
                     ? "bg-stone-900 text-white"
-                    : "bg-white border border-stone-100 text-stone-600"
+                    : "bg-white border border-stone-200 text-stone-600 hover:border-stone-300"
                 }`}
               >
                 {cat}
@@ -138,27 +93,26 @@ export default function BlogPage() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-     
-
-        {/* Regular Posts Grid */}
-        {regularPosts.length > 0 ? (
+        {filteredPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {regularPosts.map((post) => (
+            {filteredPosts.map((post) => (
               <article
                 key={post.id}
-                className="bg-white rounded-xl overflow-hidden border border-stone-100  transition-all duration-300 flex flex-col group"
+                className="bg-white rounded-xl overflow-hidden border border-stone-200 transition-all duration-300 flex flex-col group "
               >
                 <Link
-                  href={`/blog/${post.slug}`}
+                  href={`/blogs/${post.slug || post.id}`}
                   className="relative h-52 overflow-hidden bg-stone-100 block"
                 >
-                  <img
+                  <Image
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     src={post.featuredImage}
                     alt={post.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                   />
                   <div className="absolute top-3 left-3">
-                    <span className="bg-white/90 text-stone-800 text-[11px] font-semibold px-2.5 py-1 rounded-md backdrop-blur-sm ">
+                    <span className="bg-white/95 text-stone-800 text-[11px] font-semibold px-2.5 py-1 rounded-md">
                       {post.category}
                     </span>
                   </div>
@@ -172,13 +126,27 @@ export default function BlogPage() {
                       <span>{post.readTime}</span>
                     </div>
 
-                    <h3 className="font-bold text-md text-stone-900 group-hover:text-stone-700 transition leading-snug">
-                      <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                    <h3 className="font-bold text-base text-stone-900 group-hover:text-stone-700 transition leading-snug">
+                      <Link href={`/blogs/${post.slug || post.id}`}>
+                        {post.title}
+                      </Link>
                     </h3>
 
-                    <p className="mt-2.5 text-stone-600 text-xs  leading-relaxed tracking-wider line-clamp-2">
+                    <p className="mt-2.5 text-stone-600 text-xs leading-relaxed line-clamp-2">
                       {post.excerpt}
                     </p>
+                  </div>
+
+                  <div className="pt-4 mt-4 border-t border-stone-100 flex items-center justify-between">
+                    <span className="text-xs text-stone-500 font-medium">
+                      AG Aesthetics Team
+                    </span>
+                    <Link
+                      href={`/blogs/${post.slug || post.id}`}
+                      className="text-xs font-semibold text-stone-800 hover:text-stone-950 underline"
+                    >
+                      Read guide &rarr;
+                    </Link>
                   </div>
                 </div>
               </article>
@@ -206,6 +174,7 @@ export default function BlogPage() {
               Try adjusting your search query or select another category above.
             </p>
             <button
+              type="button"
               onClick={() => {
                 setSelectedCategory("All");
                 setSearchQuery("");
@@ -216,8 +185,6 @@ export default function BlogPage() {
             </button>
           </div>
         )}
-
-
       </main>
     </div>
   );

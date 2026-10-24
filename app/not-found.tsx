@@ -12,11 +12,11 @@ export default function NotFound() {
         <div className="relative mb-4 flex items-center justify-center">
           <span 
             aria-hidden="true" 
-            className="select-none font-serif text-[110px] sm:text-[170px] leading-none text-[#586454]/15 tracking-tighter"
+            className="select-none  text-[110px] sm:text-[170px] leading-none text-[#586454]/15 tracking-tighter"
           >
             404
           </span>
-          <h1 className="absolute font-serif text-3xl sm:text-4xl md:text-5xl text-[#586454] font-light tracking-normal">
+          <h1 className="absolute  text-3xl sm:text-4xl md:text-5xl text-[#586454] font-light tracking-normal">
             Lost Your Glow?
           </h1>
         </div>

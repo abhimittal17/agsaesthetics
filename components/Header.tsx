@@ -34,9 +34,9 @@ const treatmentsList = [
 ];
 
 const wellnessHubItems = [
-  { href: "/wellness-tips", label: "Skin & Wellness Guides", index: "01" },
-  { href: "/reviews", label: "Client Testimonials", index: "02" },
-  { href: "/faqs", label: "Clinical FAQs", index: "03" },
+  { href: "/blogs", label: "Blogs", index: "01" },
+  { href: "/reviews", label: "Testimonials", index: "02" },
+  { href: "/faqs", label: "FAQs", index: "03" },
 ];
 
 function AppSidebar() {
@@ -86,7 +86,7 @@ function AppSidebar() {
                 }`}
             >
               <span>Home</span>
-              <span className="font-mono text-[10px] text-white/40">/01</span>
+              <span className=" text-[10px] text-white/40">/01</span>
             </Link>
           </SidebarMenuItem>
 
@@ -100,7 +100,7 @@ function AppSidebar() {
                 }`}
             >
               <span>About Clinic</span>
-              <span className="font-mono text-[10px] text-white/40">/02</span>
+              <span className=" text-[10px] text-white/40">/02</span>
             </Link>
           </SidebarMenuItem>
 
@@ -123,7 +123,7 @@ function AppSidebar() {
                           }`}
                       >
                         <span>{item.title}</span>
-                        <span className="font-mono text-[10px] text-white/40">{item.index}</span>
+                        <span className=" text-[10px] text-white/40">{item.index}</span>
                       </Link>
                     </SidebarMenuSubItem>
                   ))}
@@ -151,7 +151,7 @@ function AppSidebar() {
                           }`}
                       >
                         <span>{item.label}</span>
-                        <span className="font-mono text-[10px] text-white/40">{item.index}</span>
+                        <span className=" text-[10px] text-white/40">{item.index}</span>
                       </Link>
                     </SidebarMenuSubItem>
                   ))}
@@ -170,7 +170,7 @@ function AppSidebar() {
                 }`}
             >
               <span>Contact</span>
-              <span className="font-mono text-[10px] text-white/40">/03</span>
+              <span className=" text-[10px] text-white/40">/03</span>
             </Link>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -232,7 +232,7 @@ function DesktopNavbar() {
                   : "text-white/85 hover:bg-white/15 hover:text-white"
                 }`}
             >
-              About Clinic
+              About
             </Link>
 
             {/* Treatments Menu */}
