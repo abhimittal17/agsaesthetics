@@ -10,6 +10,6 @@ if (!connectionString) {
 }
 
 export const db = postgres<Contract>({
-  contractJson,
+  contract: contractJson,
   url: connectionString,
 });
