@@ -1,7 +1,7 @@
 
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { db } from "@/app/prisma/db";
+import { db } from "@/app/prisma/contract";
 
 export const runtime = "nodejs";
 
