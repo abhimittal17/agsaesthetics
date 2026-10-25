@@ -1,9 +1,9 @@
+import type { Metadata } from "next";
 import { IoMdQuote } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
-import Image from "next/image";
 
-export const metadata = {
-  title: "Client Reviews & Testimonials - AG Aesthetics & Wellness Clinic",
+export const metadata: Metadata = {
+  title: "Client Reviews & Testimonials | AG Aesthetics & Wellness Clinic",
   description:
     "Read genuine reviews and patient testimonials for skin treatments, HydraFacials, laser therapies, and anti-aging treatments at AG Aesthetics & Wellness Clinic in Kharar, Punjab.",
   keywords: [
@@ -15,19 +15,44 @@ export const metadata = {
     "Aesthetic Treatments",
     "HydraFacial Reviews",
   ],
+  metadataBase: new URL("https://agsaesthetics.com"),
+  alternates: {
+    canonical: "/reviews",
+  },
   openGraph: {
-    title: "Client Reviews & Testimonials - AG Aesthetics & Wellness Clinic",
+    title: "Client Reviews & Testimonials | AG Aesthetics & Wellness Clinic",
     description:
       "Read genuine patient stories and reviews about our aesthetic, skin, and wellness treatments.",
-    image: "/ctaimage2.webp",
-    url: "https://agsaesthetics.com/reviews",
+    url: "/reviews",
+    siteName: "AG Aesthetics & Wellness Clinic",
+    images: [
+      {
+        url: "/ctaimage2.webp",
+        width: 1200,
+        height: 630,
+        alt: "AG Aesthetics & Wellness Clinic Client Reviews & Testimonials",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
   },
   twitter: {
-    title: "Client Reviews & Testimonials - AG Aesthetics & Wellness Clinic",
+    card: "summary_large_image",
+    title: "Client Reviews & Testimonials | AG Aesthetics & Wellness Clinic",
     description:
       "Read genuine patient stories and reviews about our aesthetic, skin, and wellness treatments.",
-    image: "/ctaimage2.webp",
-    card: "summary_large_image",
+    images: ["/ctaimage2.webp"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -99,46 +124,49 @@ export default function Reviews() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto text-stone-900 py-10 px-4">
-      {/* Header & Hero Image Banner */}
-      <div className="text-center md:py-10 space-y-3 mb-8">
-        <div>
-          <p className="text-sm uppercase tracking-widest text-stone-500 font-medium">
-            Testimonials
-          </p>
-          <h1 className="text-2xl md:text-4xl md:leading-relaxed tracking-wide">
-            What Our Patients Say
-          </h1>
-        </div>
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-stone-900 py-8 sm:py-12 md:py-16">
+      {/* Header */}
+      <div className="text-left sm:text-center pt-2 sm:pt-4 pb-8 sm:pb-12 space-y-2 sm:space-y-3">
+        <p className="text-xs sm:text-sm uppercase tracking-widest text-stone-500 font-medium">
+          Testimonials
+        </p>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-stone-950">
+          What Our Patients Say
+        </h1>
       </div>
 
       {/* Reviews Grid */}
       <section
         aria-label="Client reviews"
-        className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+        className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
       >
         {reviews.map((r) => (
           <article
             key={r.id}
-            className="rounded-2xl p-7 min-h-96 justify-between  border border-stone-100  duration-200 flex flex-col"
+            className="rounded-2xl p-5 sm:p-6 md:p-7 min-h-[18rem] sm:min-h-80 md:min-h-96 justify-between border border-stone-200/80 bg-white  transition-colors  duration-200 flex flex-col"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <IoMdQuote className="text-3xl text-[#586454]" />
-                <div className="flex text-amber-400 space-x-1 text-sm" aria-label={`${r.rating} out of 5 stars`}>
+                <IoMdQuote className="text-2xl sm:text-3xl text-[#586454] shrink-0" />
+                <div
+                  className="flex text-amber-400 space-x-1 text-xs sm:text-sm"
+                  aria-label={`${r.rating} out of 5 stars`}
+                >
                   {Array.from({ length: r.rating }).map((_, i) => (
                     <FaStar key={i} />
                   ))}
                 </div>
               </div>
-              <p className="font-medium leading-relaxed  md:text-sm text-stone-800">
+              <p className="font-normal sm:font-medium leading-relaxed text-sm sm:text-base text-stone-800 break-words">
                 &ldquo;{r.text}&rdquo;
               </p>
             </div>
 
-            <div className="pt-6  mt-4">
-              <p className="font-semibold text-sm text-stone-900">{r.name}</p>
-              <p className="text-xs text-stone-500 font-medium mt-0.5">
+            <div className="pt-4 sm:pt-6 mt-4 border-t border-stone-100">
+              <p className="font-semibold text-sm sm:text-base text-stone-900">
+                {r.name}
+              </p>
+              <p className="text-xs sm:text-sm text-stone-500 font-medium mt-0.5">
                 {r.treatment}
               </p>
             </div>

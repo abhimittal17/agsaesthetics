@@ -39,6 +39,8 @@ const wellnessHubItems = [
   { href: "/faqs", label: "FAQs", index: "03" },
 ];
 
+
+
 function AppSidebar() {
   const pathname = usePathname();
   const [treatmentsOpen, setTreatmentsOpen] = useState(false);
@@ -48,138 +50,199 @@ function AppSidebar() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <Sidebar className="border-r border-olive-400/20 bg-[#586454] text-stone-100">
-      <SidebarHeader className="border-b border-white/15 p-6">
+    <Sidebar className="border-r border-white/10 text-[#586454]">
+      {/* Header with matching logo layout */}
+      <SidebarHeader className="border-b border-white/10 p-5">
         <div className="flex items-center justify-between">
           <Link
             href="/"
             onClick={() => setOpenMobile(false)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-3"
           >
             <Image
-              src="/logomain.png"
+              src="/logo.png"
               alt="AG Aesthetics & Wellness Clinic"
               width={140}
-              height={40}
-              className="h-8 w-auto brightness-0 invert object-contain"
+              height={36}
+              priority
+              className="h-8 w-auto object-contain"
             />
+            <div className="border-l border-white/30 text-[9px] font-medium uppercase leading-tight tracking-widest text-[#586454]">
+              Aesthetics &<br />Wellness Clinic
+            </div>
           </Link>
+          
+
           <button
             onClick={() => setOpenMobile(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-stone-100 transition-colors hover:bg-white hover:text-olive-700"
+            className="flex h-6 w-6 items-center justify-center  bg-[#586454]  text-white transition-colors hover:bg-white/20"
             aria-label="Close menu"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3 w-3" />
           </button>
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-5 py-6">
-        <SidebarMenu className="space-y-2">
+      {/* Nav items matching desktop pills & styling */}
+      <SidebarContent className="px-4 py-5">
+        <SidebarMenu className="space-y-1.5">
+          {/* Home */}
           <SidebarMenuItem>
             <Link
               href="/"
               onClick={() => setOpenMobile(false)}
-              className={`flex items-center justify-between rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] transition-all ${isActive("/")
-                  ? "bg-stone-900 text-white"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+              className={`flex items-center rounded-2xl px-4 py-2.5 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
+                isActive("/")
+                  ? "bg-white/15 font-semibold text-[#586454]"
+                  : "text-[#586454] hover:bg-white/15 hover:text-white"
+              }`}
             >
-              <span>Home</span>
-              <span className=" text-[10px] text-white/40">/01</span>
+              Home
             </Link>
           </SidebarMenuItem>
 
+          {/* About */}
           <SidebarMenuItem>
             <Link
               href="/about-us"
               onClick={() => setOpenMobile(false)}
-              className={`flex items-center justify-between rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] transition-all ${isActive("/about-us")
-                  ? "bg-stone-900 text-white"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+              className={`flex items-center rounded-2xl px-4 py-2.5 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
+                isActive("/about-us")
+                  ? "bg-white/15 font-semibold text-[#586454]"
+                  : "text-[#586454] hover:bg-white/15 hover:text-white"
+              }`}
             >
-              <span>About Clinic</span>
-              <span className=" text-[10px] text-white/40">/02</span>
+              About
             </Link>
           </SidebarMenuItem>
 
-          <Collapsible open={treatmentsOpen} onOpenChange={setTreatmentsOpen}>
+          {/* Treatments Collapsible */}
+          <Collapsible
+            open={treatmentsOpen}
+            onOpenChange={setTreatmentsOpen}
+            defaultOpen={pathname.startsWith("/treatments")}
+          >
             <SidebarMenuItem>
-              <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] text-white/80 transition-colors hover:bg-white/10 hover:text-white">
-                <span>Clinical Treatments</span>
-                <ChevronDown className="h-4 w-4 text-white/50 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+              <CollapsibleTrigger
+                className={`flex w-full items-center justify-between rounded-2xl px-4 py-2.5 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
+                  pathname.startsWith("/treatments") || treatmentsOpen
+                    ? "bg-white/15 font-semibold text-[#586454]"
+                    : "text-[#586454] hover:bg-white/15 hover:text-white"
+                }`}
+              >
+                <span>Treatments</span>
+                <ChevronDown
+                  className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                    treatmentsOpen ? "rotate-180" : ""
+                  }`}
+                />
               </CollapsibleTrigger>
+
               <CollapsibleContent className="pt-2">
-                <SidebarMenuSub className="space-y-1.5 border-l border-white/20 pl-4">
-                  {treatmentsList.map((item) => (
-                    <SidebarMenuSubItem key={item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={() => setOpenMobile(false)}
-                        className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-xs transition-colors ${isActive(item.href)
-                            ? "bg-white text-olive-800 font-semibold"
-                            : "text-white/70 hover:bg-white/10 hover:text-white"
-                          }`}
-                      >
-                        <span>{item.title}</span>
-                        <span className=" text-[10px] text-white/40">{item.index}</span>
-                      </Link>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
+                <div className="rounded-2xl border border-slate-100/10 bg-white p-2">
+                  <SidebarMenuSub className="m-0 flex flex-col gap-1 border-none p-0">
+                    {treatmentsList.map((treatment) => {
+                      const isCurrent = pathname === treatment.href;
+                      return (
+                        <SidebarMenuSubItem key={treatment.href}>
+                          <Link
+                            href={treatment.href}
+                            onClick={() => setOpenMobile(false)}
+                            className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors ${
+                              isCurrent
+                                ? "bg-[#586454] font-medium text-white"
+                                : "text-[#586454] hover:bg-white/15 hover:text-[#586454]"
+                            }`}
+                          >
+                            <span className="tracking-wide">
+                              {treatment.title}
+                            </span>
+                          </Link>
+                        </SidebarMenuSubItem>
+                      );
+                    })}
+                  </SidebarMenuSub>
+                </div>
               </CollapsibleContent>
             </SidebarMenuItem>
           </Collapsible>
 
-          <Collapsible open={wellnessOpen} onOpenChange={setWellnessOpen}>
+          {/* Wellness Hub Collapsible */}
+          <Collapsible
+            open={wellnessOpen}
+            onOpenChange={setWellnessOpen}
+            defaultOpen={pathname.startsWith("/wellness")}
+          >
             <SidebarMenuItem>
-              <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] text-white/80 transition-colors hover:bg-white/10 hover:text-white">
+              <CollapsibleTrigger
+                className={`flex w-full items-center justify-between rounded-2xl px-4 py-2.5 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
+                  pathname.startsWith("/wellness") || wellnessOpen
+                    ? "bg-white/15 font-semibold text-[#586454]"
+                    : "text-[#586454] hover:bg-white/15 hover:text-[#586454]"
+                }`}
+              >
                 <span>Wellness Hub</span>
-                <ChevronDown className="h-4 w-4 text-white/50 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                <ChevronDown
+                  className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                    wellnessOpen ? "rotate-180" : ""
+                  }`}
+                />
               </CollapsibleTrigger>
+
               <CollapsibleContent className="pt-2">
-                <SidebarMenuSub className="space-y-1.5 border-l border-white/20 pl-4">
-                  {wellnessHubItems.map((item) => (
-                    <SidebarMenuSubItem key={item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={() => setOpenMobile(false)}
-                        className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-xs transition-colors ${isActive(item.href)
-                            ? "bg-white text-olive-800 font-semibold"
-                            : "text-white/70 hover:bg-white/10 hover:text-white"
-                          }`}
-                      >
-                        <span>{item.label}</span>
-                        <span className=" text-[10px] text-white/40">{item.index}</span>
-                      </Link>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
+                <div className="rounded-2xl border border-slate-100/10 bg-white p-2">
+                  <SidebarMenuSub className="m-0 flex flex-col gap-1 border-none p-0">
+                    {wellnessHubItems.map((item) => {
+                      const isCurrent = pathname === item.href;
+                      return (
+                        <SidebarMenuSubItem key={item.href}>
+                          <Link
+                            href={item.href}
+                            onClick={() => setOpenMobile(false)}
+                            className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors ${
+                              isCurrent
+                                ? "bg-[#586454] font-medium text-[#586454]"
+                                : "text-[#586454] hover:bg-white/15 hover:text-[#586454]"
+                            }`}
+                          >
+                            <span className="tracking-wide">{item.label}</span>
+                          </Link>
+                        </SidebarMenuSubItem>
+                      );
+                    })}
+                  </SidebarMenuSub>
+                </div>
               </CollapsibleContent>
             </SidebarMenuItem>
           </Collapsible>
 
+          {/* Contact */}
           <SidebarMenuItem>
             <Link
               href="/contact-us"
               onClick={() => setOpenMobile(false)}
-              className={`flex items-center justify-between rounded-2xl px-4 py-3 text-xs font-medium uppercase tracking-[0.18em] transition-all ${isActive("/contact-us")
-                  ? "bg-stone-900 text-white"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+              className={`flex items-center rounded-2xl px-4 py-2.5 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
+                isActive("/contact-us")
+                  ? "bg-white/15 font-semibold text-[#586454]"
+                  : "text-[#586454] hover:bg-white/15 hover:text-[#586454]"
+              }`}
             >
-              <span>Contact</span>
-              <span className=" text-[10px] text-white/40">/03</span>
+              Contact
             </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-white/15 p-6">
-        <Link href="/appointments" onClick={() => setOpenMobile(false)}>
-          <button className="w-full rounded-2xl bg-stone-950 py-3.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition-colors hover:bg-stone-900">
-            Book Consultation
+      {/* Footer CTA mirroring Desktop "Book Now" */}
+      <SidebarFooter className="border-t border-white/10 text-white  bg-[#586454]">
+        <Link
+          href="/appointments"
+          onClick={() => setOpenMobile(false)}
+          className="w-full"
+        >
+          <button className="group flex w-full items-center justify-center gap-2 rounded-2xl  px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white transition-colors ">
+            <span>Book Now</span>
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </button>
         </Link>
       </SidebarFooter>
@@ -361,10 +424,10 @@ function MobileLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <div className="sticky top-0  flex items-center justify-between border-b border-stone-200/80 bg-white px-5 py-3.5">
+        <div className="sticky top-0  z-50 flex items-center justify-between border-b border-stone-200/80 bg-white px-5 py-3.5">
           <Link href="/">
             <Image
-              src="/logomain.png"
+              src="/logo.png"
               alt="AG Aesthetics & Wellness Clinic"
               width={125}
               height={32}

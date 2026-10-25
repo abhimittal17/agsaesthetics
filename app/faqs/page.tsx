@@ -1,7 +1,8 @@
+import type { Metadata } from "next";
 import { Plus } from "lucide-react";
 
-export const metadata = {
-  title: "FAQs - AG Aesthetics & Wellness Clinic",
+export const metadata: Metadata = {
+  title: "Frequently Asked Questions | AG Aesthetics & Wellness Clinic",
   description:
     "Find answers to frequently asked questions about our clinical skin treatments, aesthetic procedures, lasers, consultation process, and safety standards at AG Aesthetics & Wellness Clinic in Kharar.",
   keywords: [
@@ -13,19 +14,44 @@ export const metadata = {
     "Wellness Clinic",
     "AG Aesthetics & Wellness Clinic",
   ],
+  metadataBase: new URL("https://agsaesthetics.com"),
+  alternates: {
+    canonical: "/faqs",
+  },
   openGraph: {
-    title: "FAQs - AG Aesthetics & Wellness Clinic",
+    title: "Frequently Asked Questions | AG Aesthetics & Wellness Clinic",
     description:
       "Find answers to frequently asked questions about our clinical skin treatments, aesthetic procedures, lasers, consultation process, and safety standards at AG Aesthetics & Wellness Clinic in Kharar.",
-    image: "/ctaimage2.webp",
-    url: "https://agsaesthetics.com/faqs",
+    url: "/faqs",
+    siteName: "AG Aesthetics & Wellness Clinic",
+    images: [
+      {
+        url: "/6.png",
+        width: 1200,
+        height: 630,
+        alt: "AG Aesthetics & Wellness Clinic FAQs",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
   },
   twitter: {
-    title: "FAQs - AG Aesthetics & Wellness Clinic",
+    card: "summary_large_image",
+    title: "Frequently Asked Questions | AG Aesthetics & Wellness Clinic",
     description:
       "Find answers to frequently asked questions about our clinical skin treatments, aesthetic procedures, lasers, consultation process, and safety standards at AG Aesthetics & Wellness Clinic in Kharar.",
-    image: "/ctaimage2.webp",
-    card: "summary_large_image",
+    images: ["/6.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -74,36 +100,38 @@ export default function Faqs() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto text-stone-900 pb-16">
-      <div className="text-center pt-10 pb-12 space-y-2">
-        <p className="text-sm uppercase tracking-widest text-stone-500 font-medium">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-stone-900 pb-16 sm:pb-20 md:pb-24">
+      {/* Header */}
+      <div className="text-left sm:text-center pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 space-y-2 sm:space-y-3">
+        <p className="text-xs sm:text-sm uppercase tracking-widest text-stone-500 font-medium">
           FAQ
         </p>
-        <h1 className="text-2xl md:text-4xl md:leading-relaxed tracking-wider">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-stone-950">
           Frequently Asked Questions
         </h1>
       </div>
 
+      {/* Accordion Section */}
       <section>
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="space-y-4">
+        <div className="mx-auto max-w-3xl">
+          <div className="space-y-3 sm:space-y-4">
             {faqData.map((faq, index) => (
               <div
                 key={index}
-                className="border border-stone-100 rounded-2xl overflow-hidden bg-white transition-colors "
+                className="border border-stone-200/80 rounded-xl sm:rounded-2xl overflow-hidden bg-white  transition-colors"
               >
-                <details className="group p-5">
-                  <summary className="list-none cursor-pointer flex justify-between items-center select-none">
-                    <h3 className="text-sm text-stone-900 pr-4">
+                <details className="group p-4 sm:p-5 md:p-6">
+                  <summary className="list-none cursor-pointer flex justify-between items-center select-none gap-3">
+                    <h2 className="text-sm sm:text-base font-medium text-stone-900 leading-snug">
                       {faq.question}
-                    </h3>
-                    <div className="ml-4 shrink-0">
-                      <div className="w-7 h-7 flex items-center justify-center rounded-full bg-stone-100 text-stone-600 transition-transform duration-200 group-open:rotate-45">
-                        <Plus className="w-4 h-4" />
+                    </h2>
+                    <div className="shrink-0">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-stone-100 text-stone-600 transition-transform duration-200 group-open:rotate-45">
+                        <Plus className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                       </div>
                     </div>
                   </summary>
-                  <div className="mt-3 pt-3  text-stone-600 leading-relaxed text-sm ">
+                  <div className="mt-3 pt-3 border-t border-stone-100 text-stone-600 leading-relaxed text-xs sm:text-sm md:text-base break-words">
                     <p>{faq.answer}</p>
                   </div>
                 </details>

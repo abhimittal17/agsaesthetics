@@ -1,7 +1,8 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Cancellation & Refund Policy - AG Aesthetics & Wellness Clinic",
+export const metadata: Metadata = {
+  title: "Cancellation & Refund Policy | AG Aesthetics & Wellness Clinic",
   description:
     "Review the Refund, Cancellation, and Package policies for treatments, consultations, and skincare products at AG Aesthetics & Wellness Clinic in Kharar, Punjab.",
   keywords: [
@@ -13,40 +14,68 @@ export const metadata = {
     "Package Policy",
     "Kharar Skin Clinic",
   ],
+  metadataBase: new URL("https://agsaesthetics.com"),
+  alternates: {
+    canonical: "/refund-policy",
+  },
   openGraph: {
-    title: "Cancellation & Refund Policy - AG Aesthetics & Wellness Clinic",
+    title: "Cancellation & Refund Policy | AG Aesthetics & Wellness Clinic",
     description:
       "Review the Refund and Cancellation policies for treatments, appointments, and retail products at AG Aesthetics & Wellness Clinic.",
-    image: "/ctaimage2.webp",
-    url: "https://agsaesthetics.com/refund-policy",
+    url: "/refund-policy",
+    siteName: "AG Aesthetics & Wellness Clinic",
+    images: [
+      {
+        url: "/7.png",
+        width: 1200,
+        height: 630,
+        alt: "AG Aesthetics & Wellness Clinic Cancellation & Refund Policy",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
   },
   twitter: {
-    title: "Cancellation & Refund Policy - AG Aesthetics & Wellness Clinic",
+    card: "summary_large_image",
+    title: "Cancellation & Refund Policy | AG Aesthetics & Wellness Clinic",
     description:
       "Review the Refund and Cancellation policies for treatments, appointments, and retail products at AG Aesthetics & Wellness Clinic.",
-    image: "/ctaimage2.webp",
-    card: "summary_large_image",
+    images: ["/7.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
 export default function RefundPolicy() {
   return (
-    <div className="max-w-5xl mx-auto text-stone-900">
-      <div className="md:text-center pt-10 space-y-3 px-4 md:py-10">
-        <p className="text-sm uppercase tracking-widest text-stone-500">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-stone-900">
+      {/* Header */}
+      <div className="pt-8 sm:pt-12 md:pt-16 pb-6 text-left sm:text-center space-y-2 sm:space-y-3">
+        <p className="text-xs sm:text-sm uppercase tracking-widest text-stone-500 font-medium">
           POLICIES
         </p>
-        <h1 className="text-2xl md:text-4xl leading-relaxed tracking-wider">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight text-stone-950">
           Cancellation &amp; Refund Policy
         </h1>
       </div>
 
-      <section className="px-4 pt-10 pb-20 sm:pt-8 sm:pb-24">
-        <div className="space-y-14 text-sm leading-relaxed">
-          {/* Overview */}
+      <section className="pt-4 pb-14 sm:pb-20 md:pb-24">
+        <div className="space-y-8 sm:space-y-10 md:space-y-12 text-sm sm:text-base leading-relaxed text-stone-700">
+          {/* 1. Policy Overview */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">1. Policy Overview</h2>
-            <p className="mb-3">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-stone-900">
+              1. Policy Overview
+            </h2>
+            <p className="mb-3 break-words">
               At <strong>AG Aesthetics &amp; Wellness Clinic</strong>, our priority is to deliver
               exceptional, safe, and professional clinical care. Because our services require reserved
               practitioner time, clinical room prep, and single-use sterile medical supplies, we operate
@@ -58,9 +87,11 @@ export default function RefundPolicy() {
             </p>
           </div>
 
-          {/* Clinical Consultations & Treatments */}
+          {/* 2. Clinical Consultations & Treatments */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">2. Completed Treatments &amp; Consultations</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-stone-900">
+              2. Completed Treatments &amp; Consultations
+            </h2>
             <p className="mb-3">
               <strong>All clinical consultations and completed aesthetic or wellness procedures are strictly non-refundable.</strong>
             </p>
@@ -76,14 +107,16 @@ export default function RefundPolicy() {
             </p>
           </div>
 
-          {/* Appointment Cancellations & Rescheduling */}
+          {/* 3. Appointment Cancellations & Rescheduling */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">3. Appointment Cancellations &amp; Booking Deposits</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-stone-900">
+              3. Appointment Cancellations &amp; Booking Deposits
+            </h2>
             <p className="mb-3">
               We reserve dedicated clinical time specifically for your appointment. If you need to cancel
               or reschedule, please give us advance notice:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
+            <ul className="list-disc pl-5 sm:pl-6 space-y-2">
               <li>
                 <strong>Notice of 24 Hours or More:</strong> Your booking deposit or advance fee can be
                 fully transferred to a rescheduled date or retained as a clinic credit toward future treatments.
@@ -99,14 +132,16 @@ export default function RefundPolicy() {
             </ul>
           </div>
 
-          {/* Treatment Packages & Bundles */}
+          {/* 4. Treatment Packages & Bundles */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">4. Treatment Packages &amp; Multi-Session Bundles</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-stone-900">
+              4. Treatment Packages &amp; Multi-Session Bundles
+            </h2>
             <p className="mb-3">
               Packages are offered at discounted rates to encourage sustained, multi-session clinical outcomes.
               The following rules apply to package purchases:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
+            <ul className="list-disc pl-5 sm:pl-6 space-y-2">
               <li>
                 Packages are non-refundable once the first session has been commenced or completed.
               </li>
@@ -125,10 +160,12 @@ export default function RefundPolicy() {
             </ul>
           </div>
 
-          {/* Retail & Skincare Products */}
+          {/* 5. Retail & Skincare Products */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">5. Retail Skincare &amp; Cosmeceutical Products</h2>
-            <ul className="list-disc pl-6 space-y-2">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-stone-900">
+              5. Retail Skincare &amp; Cosmeceutical Products
+            </h2>
+            <ul className="list-disc pl-5 sm:pl-6 space-y-2">
               <li>
                 <strong>Opened or Used Products:</strong> Due to hygiene, sterility, and safety regulations,
                 we strictly do not accept returns or offer refunds on opened, unsealed, or used skincare,
@@ -142,13 +179,15 @@ export default function RefundPolicy() {
             </ul>
           </div>
 
-          {/* Processing Approved Refunds */}
+          {/* 6. Processing Approved Refunds */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">6. Refund Processing Timeline</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-stone-900">
+              6. Refund Processing Timeline
+            </h2>
             <p className="mb-3">
               Where a refund is approved by clinic management under exceptional circumstances:
             </p>
-            <ul className="list-disc pl-6 space-y-2">
+            <ul className="list-disc pl-5 sm:pl-6 space-y-2">
               <li>
                 Refunds will be processed back to the original payment method (Bank Account, UPI, or Card).
               </li>
@@ -162,14 +201,16 @@ export default function RefundPolicy() {
             </ul>
           </div>
 
-          {/* How to Request Assistance */}
+          {/* 7. How to Request Assistance */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">7. Contact for Cancellation or Refund Requests</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-stone-900">
+              7. Contact for Cancellation or Refund Requests
+            </h2>
             <p className="mb-3">
               All formal rescheduling, cancellation, or refund inquiries must be submitted in writing along with
               your booking details or payment receipt:
             </p>
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 text-stone-800 space-y-1">
+            <div className="bg-stone-50 border border-stone-200 rounded-lg p-4 sm:p-5 text-stone-800 space-y-1.5 break-words">
               <p className="font-semibold text-stone-900">AG Aesthetics &amp; Wellness Clinic</p>
               <p>1st Floor, Sco No. 6, SAI Street, Radiola Road Kharar, Kharar, Punjab, India</p>
               <p>
@@ -180,7 +221,7 @@ export default function RefundPolicy() {
               </p>
               <p>
                 Email:{" "}
-                <a href="mailto:info@agsaesthetics.com" className="text-stone-900 underline font-medium">
+                <a href="mailto:info@agsaesthetics.com" className="text-stone-900 underline font-medium break-all">
                   info@agsaesthetics.com
                 </a>
               </p>
@@ -188,52 +229,53 @@ export default function RefundPolicy() {
           </div>
 
           {/* Footer Navigation */}
-          <div>
-            <div className="border-t border-stone-200 pt-6 mt-5">
-              <p className="text-xs sm:text-base text-stone-500">
-                Last updated: September 2026
-              </p>
+          <div className="border-t border-stone-200 pt-6 mt-8">
+            <p className="text-xs sm:text-sm text-stone-500">
+              Last updated: September 2026
+            </p>
 
-              <div className="flex flex-col sm:flex-row justify-between md:items-center mt-4 gap-4">
-                <div className="text-xs space-y-1 text-stone-600">
-                  <p className="font-semibold text-stone-900">
-                    AG Aesthetics &amp; Wellness Clinic
-                  </p>
-                  <p>1st Floor, Sco No. 6, SAI Street, Radiola Road Kharar, Kharar, India</p>
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center mt-6 gap-5">
+              <div className="text-xs sm:text-sm space-y-1 text-stone-600 break-words">
+                <p className="font-semibold text-stone-900">
+                  AG Aesthetics &amp; Wellness Clinic
+                </p>
+                <p>1st Floor, Sco No. 6, SAI Street, Radiola Road Kharar, Kharar, India</p>
+                <div className="flex flex-wrap gap-x-3 gap-y-1 pt-0.5">
                   <p>
                     Phone:{" "}
                     <a href="tel:+919653552999" className="text-stone-800 underline hover:text-stone-950">
                       +91 96535 52999
                     </a>
                   </p>
+                  <span>•</span>
                   <p>
                     Email:{" "}
-                    <a href="mailto:info@agsaesthetics.com" className="text-stone-800 underline hover:text-stone-950">
+                    <a href="mailto:info@agsaesthetics.com" className="text-stone-800 underline hover:text-stone-950 break-all">
                       info@agsaesthetics.com
                     </a>
                   </p>
                 </div>
+              </div>
 
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    href="/terms-and-conditions"
-                    className="text-sm text-stone-600 hover:text-stone-900 underline"
-                  >
-                    Terms &amp; Conditions
-                  </Link>
-                  <Link
-                    href="/privacy-policy"
-                    className="text-sm text-stone-600 hover:text-stone-900 underline"
-                  >
-                    Privacy Policy
-                  </Link>
-                  <Link
-                    href="/contact-us"
-                    className="text-sm text-stone-600 hover:text-stone-900 underline"
-                  >
-                    Contact Us
-                  </Link>
-                </div>
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 shrink-0">
+                <Link
+                  href="/terms-and-conditions"
+                  className="text-xs sm:text-sm text-stone-600 hover:text-stone-900 underline"
+                >
+                  Terms &amp; Conditions
+                </Link>
+                <Link
+                  href="/privacy-policy"
+                  className="text-xs sm:text-sm text-stone-600 hover:text-stone-900 underline"
+                >
+                  Privacy Policy
+                </Link>
+                <Link
+                  href="/contact-us"
+                  className="text-xs sm:text-sm text-stone-600 hover:text-stone-900 underline"
+                >
+                  Contact Us
+                </Link>
               </div>
             </div>
           </div>
