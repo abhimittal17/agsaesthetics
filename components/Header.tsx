@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -39,12 +39,14 @@ const wellnessHubItems = [
   { href: "/faqs", label: "FAQs", index: "03" },
 ];
 
+
+
 function AppSidebar() {
   const pathname = usePathname();
-  const [treatmentsOpen, setTreatmentsOpen] = useState(() =>
+  const [treatmentsExpanded, setTreatmentsExpanded] = useState(() =>
     pathname.startsWith("/treatments")
   );
-  const [wellnessOpen, setWellnessOpen] = useState(() =>
+  const [wellnessExpanded, setWellnessExpanded] = useState(() =>
     pathname.startsWith("/wellness") ||
     pathname === "/blogs" ||
     pathname === "/reviews" ||
@@ -52,13 +54,16 @@ function AppSidebar() {
   );
   const { setOpenMobile } = useSidebar();
 
-  const isActive = (path: string) => pathname === path;
-  const treatmentsActive = pathname.startsWith("/treatments");
-  const wellnessActive =
+  const treatmentsOpen =
+    treatmentsExpanded || pathname.startsWith("/treatments");
+  const wellnessOpen =
+    wellnessExpanded ||
     pathname.startsWith("/wellness") ||
     pathname === "/blogs" ||
     pathname === "/reviews" ||
     pathname === "/faqs";
+
+  const isActive = (path: string) => pathname === path;
 
   return (
     <Sidebar className="border-r border-white/10 text-[#586454]">
@@ -128,8 +133,8 @@ function AppSidebar() {
 
           {/* Treatments Collapsible */}
           <Collapsible
-            open={treatmentsOpen || treatmentsActive}
-            onOpenChange={setTreatmentsOpen}
+            open={treatmentsOpen}
+            onOpenChange={setTreatmentsExpanded}
           >
             <SidebarMenuItem>
               <CollapsibleTrigger
@@ -142,7 +147,7 @@ function AppSidebar() {
                 <span>Treatments</span>
                 <ChevronDown
                   className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                    treatmentsOpen || treatmentsActive ? "rotate-180" : ""
+                    treatmentsOpen ? "rotate-180" : ""
                   }`}
                 />
               </CollapsibleTrigger>
@@ -178,8 +183,8 @@ function AppSidebar() {
 
           {/* Wellness Hub Collapsible */}
           <Collapsible
-            open={wellnessOpen || wellnessActive}
-            onOpenChange={setWellnessOpen}
+            open={wellnessOpen}
+            onOpenChange={setWellnessExpanded}
           >
             <SidebarMenuItem>
               <CollapsibleTrigger
@@ -192,7 +197,7 @@ function AppSidebar() {
                 <span>Wellness Hub</span>
                 <ChevronDown
                   className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                    wellnessOpen || wellnessActive ? "rotate-180" : ""
+                    wellnessOpen ? "rotate-180" : ""
                   }`}
                 />
               </CollapsibleTrigger>
@@ -256,6 +261,7 @@ function AppSidebar() {
   );
 }
 
+
 function DesktopNavbar() {
   const pathname = usePathname();
   const [treatmentOpen, setTreatmentOpen] = useState(false);
@@ -264,42 +270,42 @@ function DesktopNavbar() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full px-6 py-5">
+    <header className="sticky z-50 top-0 w-full px-6 py-5">
       <div className="mx-auto max-w-7xl">
-        <div className="relative flex items-center justify-between rounded-full bg-[#586454] px-7 py-3.5 shadow-md">
+        <div className="relative flex items-center justify-between rounded-full bg-[#586454] px-7 py-3.5">
           <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/aglogo.png"
-              alt="AG Aesthetics & Wellness Clinic"
-              width={160}
-              height={40}
-              priority
-              className="h-8 w-auto brightness-0 invert object-contain"
-            />
-            <div className="border-l border-white/30 pl-3 text-[10px] font-medium uppercase leading-tight tracking-widest text-white">
-              Aesthetics &<br />Wellness Clinic
+            <div className="flex items-center gap-3">
+              <Image
+                src="/aglogo.png"
+                alt="AG Aesthetics & Wellness Clinic"
+                width={160}
+                height={40}
+                priority
+                className="h-8 w-auto brightness-0 invert object-contain"
+              />
+              <div className="text-[10px] uppercase tracking-widest font-medium leading-tight text-white border-l pl-3 border-gray-300">
+                Aesthetics &<br />Wellness Clinic
+              </div>
             </div>
           </Link>
 
           <nav className="flex items-center gap-1.5">
             <Link
               href="/"
-              className={`rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
-                isActive("/")
-                  ? "bg-white/15 font-semibold text-white"
+              className={`rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${isActive("/")
+                  ? "bg-white/15 text-white  font-semibold"
                   : "text-white/85 hover:bg-white/15 hover:text-white"
-              }`}
+                }`}
             >
               Home
             </Link>
 
             <Link
               href="/about-us"
-              className={`rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
-                isActive("/about-us")
-                  ? "bg-white/15 font-semibold text-white"
+              className={`rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${isActive("/about-us")
+                  ? "bg-white/15 text-white  font-semibold"
                   : "text-white/85 hover:bg-white/15 hover:text-white"
-              }`}
+                }`}
             >
               About
             </Link>
@@ -311,24 +317,21 @@ function DesktopNavbar() {
               onMouseLeave={() => setTreatmentOpen(false)}
             >
               <button
-                type="button"
-                className={`flex items-center gap-1.5 rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
-                  pathname.startsWith("/treatments") || treatmentOpen
-                    ? "bg-white/15 font-semibold text-white"
-                    : "text-white/85 hover:bg-white/15 hover:text-white"
-                }`}
+                className={`flex items-center gap-1.5 rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${pathname.startsWith("/treatments") || treatmentOpen
+                    ? "bg-white/15 text-white  font-semibold"
+                    : "text-white/85  hover:bg-white/15 hover:text-white"
+                  }`}
               >
                 <span>Treatments</span>
                 <ChevronDown
-                  className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                    treatmentOpen ? "rotate-180" : ""
-                  }`}
+                  className={`h-3.5 w-3.5 transition-transform duration-200 ${treatmentOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
               {treatmentOpen && (
-                <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
-                  <div className="w-64 rounded-3xl border border-stone-100 bg-white p-2.5 shadow-xl">
+                <div className="absolute left-1/2 top-full -translate-x-1/2 pt-6">
+                  <div className="w-64 rounded-3xl border border-slate-100 bg-white p-2.5">
                     <div className="flex flex-col gap-1">
                       {treatmentsList.map((treatment) => {
                         const isCurrent = pathname === treatment.href;
@@ -336,15 +339,15 @@ function DesktopNavbar() {
                           <Link
                             key={treatment.href}
                             href={treatment.href}
-                            className={`group flex items-center justify-between rounded-2xl px-3.5 py-2.5 transition-all ${
-                              isCurrent
-                                ? "bg-[#586454] font-medium text-white"
+                            className={`group flex items-center justify-between rounded-2xl px-3.5 py-2.5 transition-all ${isCurrent
+                                ? "bg-[#586454] text-white font-medium"
                                 : "text-stone-700 hover:bg-stone-100 hover:text-stone-950"
-                            }`}
+                              }`}
                           >
                             <span className="text-xs tracking-wide">
                               {treatment.title}
                             </span>
+
                           </Link>
                         );
                       })}
@@ -361,24 +364,21 @@ function DesktopNavbar() {
               onMouseLeave={() => setWellnessOpen(false)}
             >
               <button
-                type="button"
-                className={`flex items-center gap-1.5 rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
-                  pathname.startsWith("/wellness") || wellnessOpen
-                    ? "bg-white/15 font-semibold text-white"
+                className={`flex items-center gap-1.5 rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${pathname.startsWith("/wellness") || wellnessOpen
+                    ? "bg-white/15 text-white  font-semibold"
                     : "text-white/85 hover:bg-white/15 hover:text-white"
-                }`}
+                  }`}
               >
                 <span>Wellness Hub</span>
                 <ChevronDown
-                  className={`h-3.5 w-3.5 transition-transform duration-200 ${
-                    wellnessOpen ? "rotate-180" : ""
-                  }`}
+                  className={`h-3.5 w-3.5 transition-transform duration-200 ${wellnessOpen ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
               {wellnessOpen && (
-                <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2">
-                  <div className="w-64 rounded-3xl border border-stone-100 bg-white p-2.5 shadow-xl">
+                <div className="absolute left-1/2 top-full -translate-x-1/2 pt-6">
+                  <div className="w-64 rounded-3xl border border-slate-100 bg-white p-2.5">
                     <div className="flex flex-col gap-1">
                       {wellnessHubItems.map((item) => {
                         const isCurrent = pathname === item.href;
@@ -386,15 +386,15 @@ function DesktopNavbar() {
                           <Link
                             key={item.href}
                             href={item.href}
-                            className={`group flex items-center justify-between rounded-2xl px-3.5 py-2.5 transition-all ${
-                              isCurrent
-                                ? "bg-[#586454] font-medium text-white"
+                            className={`group flex items-center justify-between rounded-2xl px-3.5 py-2.5 transition-all ${isCurrent
+                                ? "bg-[#586454] text-white font-medium"
                                 : "text-stone-700 hover:bg-stone-100 hover:text-stone-950"
-                            }`}
+                              }`}
                           >
                             <span className="text-xs tracking-wide">
                               {item.label}
                             </span>
+
                           </Link>
                         );
                       })}
@@ -406,23 +406,21 @@ function DesktopNavbar() {
 
             <Link
               href="/contact-us"
-              className={`rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${
-                isActive("/contact-us")
-                  ? "bg-white/15 font-semibold text-white"
+              className={`rounded-2xl px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors ${isActive("/contact-us")
+                  ? "bg-white/15 text-white  font-semibold"
                   : "text-white/85 hover:bg-white/15 hover:text-white"
-              }`}
+                }`}
             >
               Contact
             </Link>
           </nav>
 
           <div className="flex items-center">
-            <Link
-              href="/appointments"
-              className="group inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-black transition-colors hover:bg-stone-100"
-            >
-              <span>Book Now</span>
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            <Link href="/appointments">
+              <button className="group inline-flex items-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-black">
+                <span className="text-black text-xs">Book Now</span>
+                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </button>
             </Link>
           </div>
         </div>
@@ -431,47 +429,63 @@ function DesktopNavbar() {
   );
 }
 
-export default function Header({ children }: { children: React.ReactNode }) {
-  return (
-    <SidebarProvider className="flex min-h-screen flex-col">
-      {/* Mobile Drawer Navigation */}
-      <div className="lg:hidden">
-        <AppSidebar />
-      </div>
+function MobileLayout({ children }: { children: React.ReactNode }) {
 
-      <SidebarInset className="flex flex-1 flex-col bg-transparent">
-        {/* Mobile Sticky Topbar */}
-        <div className="sticky top-0 z-40 flex items-center justify-between border-b border-stone-200/80 bg-white px-5 py-3.5 lg:hidden">
+
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <div className="sticky top-0  z-50 flex items-center justify-between border-b border-stone-200/80 bg-white px-5 py-3.5">
           <Link href="/">
             <Image
               src="/logo.png"
               alt="AG Aesthetics & Wellness Clinic"
               width={125}
               height={32}
-              priority
               className="h-7 w-auto object-contain"
             />
           </Link>
 
           <div className="flex items-center gap-2.5">
-            <Link
-              href="/appointments"
-              className="rounded-2xl bg-[#586454] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#465043]"
-            >
-              Book Now
+            <Link href="/appointments">
+              <button className="rounded-2xl bg-[#586454] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:bg-olive-600">
+                Book Now
+              </button>
             </Link>
             <SidebarTrigger />
           </div>
         </div>
-
-        {/* Desktop Navbar */}
-        <div className="hidden lg:block">
-          <DesktopNavbar />
-        </div>
-
-        {/* Page Content */}
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 overflow-auto">{children}</main>
       </SidebarInset>
     </SidebarProvider>
+  );
+}
+
+export default function Header({ children }: { children: React.ReactNode }) {
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+    const handleResize = () => setIsDesktop(mediaQuery.matches);
+    handleResize();
+
+    mediaQuery.addEventListener("change", handleResize);
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
+
+  if (isDesktop === null) return null;
+
+  return (
+    <>
+      {isDesktop ? (
+        <>
+          <DesktopNavbar />
+          <main>{children}</main>
+        </>
+      ) : (
+        <MobileLayout>{children}</MobileLayout>
+      )}
+    </>
   );
 }
