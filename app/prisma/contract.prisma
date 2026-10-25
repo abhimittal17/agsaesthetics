@@ -1,0 +1,11 @@
+// use prisma-8
+
+model ContactInquiry {
+  id             String   @id @onCreate(uuid())
+  fullname       String
+  email          String
+  phone          String
+  serviceInterest String?
+  message        String
+  createdAt      DateTime @default(now())
+}
