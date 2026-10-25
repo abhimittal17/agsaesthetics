@@ -120,7 +120,7 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/agaesthetic2026/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -131,7 +131,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/profile.php?id=61593696081159"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -246,7 +246,7 @@ export default function Footer() {
             </Link>
             <span className="text-white/40">•</span>
             <Link
-              href="/terms-and-conditions"
+              href="/terms-conditions"
               className="hover:text-white transition-colors"
             >
               Terms of Care
