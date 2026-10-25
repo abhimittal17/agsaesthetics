@@ -1,300 +1,440 @@
+
 "use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { useReCaptcha } from "next-recaptcha-v3";
-import { Phone, Mail, Clock, ArrowUpRight, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  Clock,
+  ArrowUpRight,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
+
+type FormData = {
+  fullname: string;
+  email: string;
+  phone: string;
+  serviceInterest: string;
+  message: string;
+};
+
+type FormStatus = "idle" | "loading" | "success" | "error";
+
+const initialFormData: FormData = {
+  fullname: "",
+  email: "",
+  phone: "",
+  serviceInterest: "",
+  message: "",
+};
+
+const inputClass =
+  "w-full rounded-xl border border-stone-200 bg-stone-50/50 px-3.5 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-[#586454] focus:outline-none focus:ring-2 focus:ring-[#586454]/40 sm:px-4";
+
+const labelClass =
+  "block text-[11px] font-semibold uppercase tracking-wider text-stone-700 sm:text-xs";
 
 export default function ContactClientView() {
-    const [formData, setFormData] = useState({
-        fullname: "",
-        email: "",
-        phone: "",
-        serviceInterest: "",
-        message: "",
-    });
-    const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-    const [errorMessage, setErrorMessage] = useState("");
+  const [formData, setFormData] = useState<FormData>({
+    ...initialFormData,
+  });
+  const [status, setStatus] = useState<FormStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const { executeRecaptcha } = useReCaptcha() || {};
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = event.target;
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-    ) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        if (status !== "idle" && status !== "loading") {
-            setStatus("idle");
-        }
-    };
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setStatus("loading");
-        setErrorMessage("");
+    if (status !== "loading") {
+      setStatus("idle");
+      setErrorMessage("");
+    }
+  };
 
-        try {
-            // Safe invocation of reCAPTCHA if configured
-            let token: string | undefined = undefined;
-            if (executeRecaptcha) {
-                try {
-                    token = await executeRecaptcha("ag_contact_form");
-                } catch {
-                    // Allow submission to continue if client-side recaptcha fails to boot
-                    token = undefined;
-                }
-            }
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
 
-            const res = await fetch("/api/contact", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...formData, token }),
-            });
+    if (status === "loading") return;
 
-            const data = await res.json().catch(() => null);
+    setStatus("loading");
+    setErrorMessage("");
 
-            if (res.ok && data?.success) {
-                setStatus("success");
-                setFormData({
-                    fullname: "",
-                    email: "",
-                    phone: "",
-                    serviceInterest: "",
-                    message: "",
-                });
-            } else {
-                setStatus("error");
-                setErrorMessage(data?.message || "Unable to send message at this time. Please call our clinic directly.");
-            }
-        } catch (err) {
-            console.error(err);
-            setStatus("error");
-            setErrorMessage("Network error. Please try again or reach out on WhatsApp.");
-        }
-    };
-
-    const clinicInfo = [
-        {
-            icon: <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#586454]" />,
-            label: "Direct Inquiries",
-            value: "+91 96535 52999",
-            href: "tel:+919653552999",
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        {
-            icon: <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#586454]" />,
-            label: "Concierge Email",
-            value: "info@agsaesthetics.com",
-            href: "mailto:info@agsaesthetics.com",
-        },
-        {
-            icon: <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#586454]" />,
-            label: "Consulting Hours",
-            value: "10:00 AM – 6:00 PM, Mon – Sat",
-            href: null,
-        },
-    ];
+        body: JSON.stringify({
+          fullname: formData.fullname.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          serviceInterest: formData.serviceInterest,
+          message: formData.message.trim(),
+        }),
+      });
 
-    return (
-        <main className="w-full text-stone-900 pb-16 sm:pb-20 md:pb-24">
-            {/* Hero Section */}
-            <section className="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-                <div className="text-center pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-10 space-y-2 sm:space-y-3">
-                    <p className="text-xs sm:text-sm uppercase tracking-widest text-stone-500 font-semibold">
-                        Contact Us
-                    </p>
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-stone-950 leading-tight">
-                        Reach Out for a Personalized Consultation
-                    </h1>
-                    <p className="text-xs sm:text-sm md:text-base text-stone-600 max-w-2xl mx-auto leading-relaxed pt-1">
-                        Our clinical team in Kharar is available to address questions about skin, laser, hair restoration, or custom treatment pathways.
-                    </p>
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || !data?.success) {
+        const fieldErrors = data?.errors as
+          | Record<string, string>
+          | undefined;
+
+        const firstFieldError = fieldErrors
+          ? Object.values(fieldErrors).find(
+              (value) => typeof value === "string"
+            )
+          : undefined;
+
+        setErrorMessage(
+          firstFieldError ||
+            data?.message ||
+            `Unable to submit your enquiry (HTTP ${response.status}). Please try again.`
+        );
+
+        setStatus("error");
+        return;
+      }
+
+      setFormData({ ...initialFormData });
+      setStatus("success");
+
+      if (data.emailSent === false) {
+        setErrorMessage(
+          "Your enquiry has been saved, but the clinic notification email could not be sent."
+        );
+      }
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
+
+      setErrorMessage(
+        "Unable to connect to the server. Please check your internet connection and try again."
+      );
+      setStatus("error");
+    }
+  };
+
+  const clinicInfo = [
+    {
+      icon: <Phone className="h-5 w-5 text-[#586454]" />,
+      label: "Direct Inquiries",
+      value: "+91 96535 52999",
+      href: "tel:+919653552999",
+    },
+    {
+      icon: <Mail className="h-5 w-5 text-[#586454]" />,
+      label: "Concierge Email",
+      value: "info@agsaesthetics.com",
+      href: "mailto:info@agsaesthetics.com",
+    },
+    {
+      icon: <Clock className="h-5 w-5 text-[#586454]" />,
+      label: "Consulting Hours",
+      value: "10:00 AM – 6:00 PM, Mon – Sat",
+      href: null,
+    },
+  ];
+
+  return (
+    <main className="w-full pb-16 text-stone-900 sm:pb-20 md:pb-24">
+      {/* Page heading */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="space-y-3 pb-8 pt-10 text-center sm:pb-10 sm:pt-14 md:pt-16">
+          <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 sm:text-sm">
+            Contact Us
+          </p>
+
+          <h1 className="text-2xl font-semibold leading-tight tracking-tight text-stone-950 sm:text-3xl md:text-4xl lg:text-5xl">
+            Reach Out for a Personalized Consultation
+          </h1>
+
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-stone-600 sm:text-base">
+            Our clinical team in Kharar is available to address questions
+            about skin, laser, hair restoration, or custom treatment pathways.
+          </p>
+        </div>
+
+        {/* Contact information */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          {clinicInfo.map((info) => {
+            const content = (
+              <div className="flex h-full items-center gap-4 rounded-2xl bg-[#586454] p-4 text-white transition hover:bg-[#4d5749] sm:p-5">
+                <div className="shrink-0 rounded-xl bg-white p-2.5">
+                  {info.icon}
                 </div>
 
-                {/* Quick Contact Bar */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6">
-                    {clinicInfo.map((info, idx) => {
-                        const Content = (
-                            <div className="flex items-center gap-3.5 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-[#586454] text-white  transition hover:bg-[#4d5749]">
-                                <div className="p-2 sm:p-2.5 rounded-xl bg-white shrink-0">
-                                    {info.icon}
-                                </div>
-                                <div className="min-w-0">
-                                    <span className="block text-[10px] sm:text-[11px] uppercase tracking-wider text-[#D5E0D2] font-medium">
-                                        {info.label}
-                                    </span>
-                                    <span className="text-xs sm:text-sm font-medium mt-0.5 block leading-snug truncate">
-                                        {info.value}
-                                    </span>
-                                </div>
-                            </div>
-                        );
+                <div className="min-w-0">
+                  <span className="block text-[10px] font-medium uppercase tracking-wider text-[#D5E0D2] sm:text-[11px]">
+                    {info.label}
+                  </span>
 
-                        return info.href ? (
-                            <a key={idx} href={info.href} className="block">
-                                {Content}
-                            </a>
-                        ) : (
-                            <div key={idx}>{Content}</div>
-                        );
-                    })}
+                  <span className="mt-1 block truncate text-sm font-medium">
+                    {info.value}
+                  </span>
                 </div>
-            </section>
+              </div>
+            );
 
-            {/* Form & Visual Section */}
-            <section className="px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 md:pt-20 max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-14 items-start">
-                    {/* Visual Column */}
-                    <div className="lg:col-span-5 space-y-6">
-                        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-4/5 sm:aspect-3/4 bg-stone-100 border border-stone-200/80 ">
-                            <Image
-                                src="/contact.png"
-                                alt="AG Aesthetics Clinical Atmosphere"
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 1024px) 100vw, 40vw"
-                                priority
-                            />
-                            <div className="absolute inset-0 bg-linear-to-t from-stone-950/80 via-stone-900/20 to-transparent" />
-                            <div className="absolute bottom-5 sm:bottom-8 left-5 sm:left-8 right-5 sm:right-8 text-white space-y-1">
-                                <div className="p-4 rounded-2xl bg-stone-50 text-xs sm:text-sm text-stone-700 space-y-1">
-                                    <p className="font-semibold text-stone-900">Kharar Practice Location</p>
-                                    <p className="leading-relaxed text-stone-600">
-                                        1st Floor, SCO No. 6, SAI Street, Radiola Road, Kharar, Punjab 140301
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+            return info.href ? (
+              <a
+                key={info.label}
+                href={info.href}
+                className="block"
+              >
+                {content}
+              </a>
+            ) : (
+              <div key={info.label}>{content}</div>
+            );
+          })}
+        </div>
+      </section>
 
-                        {/* Address Badge */}
+      {/* Image and enquiry form */}
+      <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pt-20">
+        <div className="grid grid-cols-1 items-start gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-14">
+          {/* Clinic image */}
+          <div className="space-y-6 lg:col-span-5">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-100 sm:aspect-[3/4] sm:rounded-3xl">
+              <Image
+                src="/contact.png"
+                alt="AG Aesthetics Clinical Atmosphere"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover"
+              />
 
-                    </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-stone-900/10 to-transparent" />
 
-                    {/* Form Card */}
-                    <div className="lg:col-span-7 bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-stone-200/80 ">
-                        <div className="border-b border-stone-100 pb-5 sm:pb-6 mb-6 sm:mb-8">
-                            <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#586454] font-semibold block">
-                                Confidential Inquiry
-                            </span>
-                            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-stone-950 mt-1.5">
-                                Request a Personalized Consultation
-                            </h2>
-                            <p className="text-xs sm:text-sm text-stone-500 mt-1 leading-relaxed">
-                                Share your concerns or preferred treatments and our clinic coordinator will contact you within 24 hours.
-                            </p>
-                        </div>
+              <div className="absolute bottom-5 left-5 right-5 sm:bottom-8 sm:left-8 sm:right-8">
+                <div className="space-y-1 rounded-2xl bg-stone-50 p-4 text-sm text-stone-700">
+                  <p className="font-semibold text-stone-900">
+                    Kharar Practice Location
+                  </p>
 
-                        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                                <div className="space-y-1.5">
-                                    <label className="text-[11px] sm:text-xs uppercase tracking-wider font-semibold text-stone-700">
-                                        Full Name *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="fullname"
-                                        required
-                                        value={formData.fullname}
-                                        onChange={handleChange}
-                                        placeholder="Simran Kaur"
-                                        className="w-full bg-stone-50/50 border border-stone-200 rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#586454]/40 focus:border-[#586454] transition"
-                                    />
-                                </div>
-                                <div className="space-y-1.5">
-                                    <label className="text-[11px] sm:text-xs uppercase tracking-wider font-semibold text-stone-700">
-                                        Email Address *
-                                    </label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        required
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        placeholder="simran@example.com"
-                                        className="w-full bg-stone-50/50 border border-stone-200 rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#586454]/40 focus:border-[#586454] transition"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                                <div className="space-y-1.5">
-                                    <label className="text-[11px] sm:text-xs uppercase tracking-wider font-semibold text-stone-700">
-                                        Contact Number *
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        required
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        placeholder="+91 98765 43210"
-                                        className="w-full bg-stone-50/50 border border-stone-200 rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#586454]/40 focus:border-[#586454] transition"
-                                    />
-                                </div>
-                                <div className="space-y-1.5">
-                                    <label className="text-[11px] sm:text-xs uppercase tracking-wider font-semibold text-stone-700">
-                                        Treatment Interest
-                                    </label>
-                                    <select
-                                        name="serviceInterest"
-                                        value={formData.serviceInterest}
-                                        onChange={handleChange}
-                                        className="w-full bg-stone-50/50 border border-stone-200 rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#586454]/40 focus:border-[#586454] transition"
-                                    >
-                                        <option value="">Select Treatment Category</option>
-                                        <option value="injectables">Facial Sculpting &amp; Wrinkle Reduction</option>
-                                        <option value="skin-rejuvenation">Medical Peels &amp; Laser Rejuvenation</option>
-                                        <option value="acne-scars">Acne &amp; Tethered Scar Revision</option>
-                                        <option value="hair-restoration">GFC &amp; Hair Follicle Restoration</option>
-                                        <option value="general-consultation">Comprehensive Skin Diagnostics</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="space-y-1.5">
-                                <label className="text-[11px] sm:text-xs uppercase tracking-wider font-semibold text-stone-700">
-                                    How May We Assist You? *
-                                </label>
-                                <textarea
-                                    name="message"
-                                    rows={4}
-                                    required
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    placeholder="Tell us about your aesthetic goals, concerns, or previous procedures..."
-                                    className="w-full bg-stone-50/50 border border-stone-200 rounded-xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-stone-900 placeholder:text-stone-400 resize-none focus:outline-none focus:ring-2 focus:ring-[#586454]/40 focus:border-[#586454] transition"
-                                />
-                            </div>
-
-                            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
-                                <button
-                                    type="submit"
-                                    disabled={status === "loading"}
-                                    className="w-full sm:w-auto px-7 py-3 sm:py-3.5 bg-[#586454] hover:bg-[#485345] text-white rounded-xl text-xs sm:text-sm uppercase tracking-wider font-semibold transition active:scale-95 disabled:opacity-60 flex items-center justify-center gap-2  cursor-pointer"
-                                >
-                                    {status === "loading" ? "Submitting..." : "Send Request"}
-                                    <ArrowUpRight className="w-4 h-4" />
-                                </button>
-                            </div>
-
-                            {status === "success" && (
-                                <div className="flex items-start gap-3 p-4 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs sm:text-sm">
-                                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                                    <p>
-                                        Thank you. Your consultation inquiry has been received. Our clinic team will reach out to you within 24 hours.
-                                    </p>
-                                </div>
-                            )}
-
-                            {status === "error" && (
-                                <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-50 text-rose-900 border border-rose-200 text-xs sm:text-sm">
-                                    <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
-                                    <p>{errorMessage}</p>
-                                </div>
-                            )}
-                        </form>
-                    </div>
+                  <p className="leading-relaxed text-stone-600">
+                    1st Floor, SCO No. 6, SAI Street, Radiola Road,
+                    Kharar, Punjab 140301
+                  </p>
                 </div>
-            </section>
-        </main>
-    );
+              </div>
+            </div>
+          </div>
+
+          {/* Contact form */}
+          <div className="rounded-2xl border border-stone-200/80 bg-white p-5 sm:rounded-3xl sm:p-8 md:p-10 lg:col-span-7">
+            <div className="mb-6 border-b border-stone-100 pb-5 sm:mb-8 sm:pb-6">
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-[#586454] sm:text-xs">
+                Confidential Inquiry
+              </span>
+
+              <h2 className="mt-2 text-xl font-semibold text-stone-950 sm:text-2xl md:text-3xl">
+                Request a Personalized Consultation
+              </h2>
+
+              <p className="mt-2 text-sm leading-relaxed text-stone-500">
+                Share your concerns or preferred treatments and our clinic
+                coordinator will contact you within 24 hours.
+              </p>
+            </div>
+
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
+              noValidate={false}
+            >
+              {/* Name and email */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                <div className="space-y-2">
+                  <label htmlFor="fullname" className={labelClass}>
+                    Full Name *
+                  </label>
+
+                  <input
+                    id="fullname"
+                    name="fullname"
+                    type="text"
+                    required
+                    minLength={2}
+                    maxLength={100}
+                    autoComplete="name"
+                    value={formData.fullname}
+                    onChange={handleChange}
+                    placeholder="Simran Kaur"
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="email" className={labelClass}>
+                    Email Address *
+                  </label>
+
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    maxLength={254}
+                    autoComplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="simran@example.com"
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              {/* Phone and treatment */}
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                <div className="space-y-2">
+                  <label htmlFor="phone" className={labelClass}>
+                    Contact Number *
+                  </label>
+
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    required
+                    minLength={7}
+                    maxLength={25}
+                    autoComplete="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+91 98765 43210"
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label
+                    htmlFor="serviceInterest"
+                    className={labelClass}
+                  >
+                    Treatment Interest
+                  </label>
+
+                  <select
+                    id="serviceInterest"
+                    name="serviceInterest"
+                    value={formData.serviceInterest}
+                    onChange={handleChange}
+                    className={inputClass}
+                  >
+                    <option value="">Select Treatment Category</option>
+                    <option value="injectables">
+                      Facial Sculpting &amp; Wrinkle Reduction
+                    </option>
+                    <option value="skin-rejuvenation">
+                      Medical Peels &amp; Laser Rejuvenation
+                    </option>
+                    <option value="acne-scars">
+                      Acne &amp; Tethered Scar Revision
+                    </option>
+                    <option value="hair-restoration">
+                      GFC &amp; Hair Follicle Restoration
+                    </option>
+                    <option value="general-consultation">
+                      Comprehensive Skin Diagnostics
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Message */}
+              <div className="space-y-2">
+                <label htmlFor="message" className={labelClass}>
+                  How May We Assist You? *
+                </label>
+
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={5}
+                  required
+                  minLength={5}
+                  maxLength={5000}
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Tell us about your aesthetic goals, concerns, or previous procedures..."
+                  className={`${inputClass} resize-y`}
+                />
+              </div>
+
+              {/* Submit button */}
+              <div className="pt-1">
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#586454] px-7 py-3.5 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#485345] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                >
+                  {status === "loading"
+                    ? "Submitting..."
+                    : "Send Request"}
+
+                  {status === "loading" ? (
+                    <span
+                      className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <ArrowUpRight className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+
+              {/* Success message */}
+              {status === "success" && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900"
+                >
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+
+                  <p>
+                    Thank you. Your consultation enquiry has been received.
+                    Our clinic team will reach out to you within 24 hours.
+                    {errorMessage && (
+                      <span className="mt-2 block text-amber-800">
+                        {errorMessage}
+                      </span>
+                    )}
+                  </p>
+                </div>
+              )}
+
+              {/* Error message */}
+              {status === "error" && (
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900"
+                >
+                  <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
+
+                  <p>{errorMessage}</p>
+                </div>
+              )}
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 }
