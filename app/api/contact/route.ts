@@ -5,8 +5,6 @@ import { db } from "@/app/prisma/db";
 
 export const runtime = "nodejs";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const allowedTreatments = new Set([
   "injectables",
   "skin-rejuvenation",
@@ -17,35 +15,45 @@ const allowedTreatments = new Set([
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body: unknown = await request.json();
+
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json(
+        { success: false, message: "Invalid form submission." },
+        { status: 400 }
+      );
+    }
+
+    const form = body as Record<string, unknown>;
 
     const fullname =
-      typeof body.fullname === "string" ? body.fullname.trim() : "";
+      typeof form.fullname === "string" ? form.fullname.trim() : "";
 
     const email =
-      typeof body.email === "string" ? body.email.trim() : "";
+      typeof form.email === "string" ? form.email.trim() : "";
 
     const phone =
-      typeof body.phone === "string" ? body.phone.trim() : "";
+      typeof form.phone === "string" ? form.phone.trim() : "";
 
     const message =
-      typeof body.message === "string" ? body.message.trim() : "";
+      typeof form.message === "string" ? form.message.trim() : "";
 
     const serviceInterest =
-      typeof body.serviceInterest === "string"
-        ? body.serviceInterest.trim()
+      typeof form.serviceInterest === "string"
+        ? form.serviceInterest.trim()
         : "";
 
-    // Validate submitted fields.
+    // Validate fields.
     const errors: Record<string, string> = {};
 
     if (fullname.length < 2 || fullname.length > 100) {
       errors.fullname = "Name must be between 2 and 100 characters.";
     }
 
+    // Correctly checks for text before @, a domain, and a dot.
     if (
       email.length > 254 ||
-      !/^[^\s@]+\.[^\s@]+$/.test(email)
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     ) {
       errors.email = "Please enter a valid email address.";
     }
@@ -66,8 +74,6 @@ export async function POST(request: Request) {
     }
 
     if (Object.keys(errors).length > 0) {
-      console.error("Contact form validation failed:", errors);
-
       return NextResponse.json(
         {
           success: false,
@@ -78,13 +84,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // Confirm email configuration.
-    if (
-      !process.env.RESEND_API_KEY ||
-      !process.env.CONTACT_TO_EMAIL ||
-      !process.env.CONTACT_FROM_EMAIL
-    ) {
-      console.error("Contact email environment variables are missing.");
+    // Check configuration before saving the enquiry.
+    const apiKey = process.env.RESEND_API_KEY;
+    const toEmail = process.env.CONTACT_TO_EMAIL;
+    const fromEmail = process.env.CONTACT_FROM_EMAIL;
+
+    if (!apiKey || !toEmail || !fromEmail) {
+      console.error("Missing contact email environment variables.");
 
       return NextResponse.json(
         {
@@ -95,7 +101,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1. Save the enquiry to Neon PostgreSQL.
+    // Save the enquiry to Neon PostgreSQL.
     const inquiry = await db.orm.public.ContactInquiry.create({
       fullname,
       email,
@@ -104,10 +110,12 @@ export async function POST(request: Request) {
       message,
     });
 
-    // 2. Send an email notification to the clinic.
+    // Send notification to the clinic.
+    const resend = new Resend(apiKey);
+
     const { error } = await resend.emails.send({
-      from: process.env.CONTACT_FROM_EMAIL,
-      to: [process.env.CONTACT_TO_EMAIL],
+      from: fromEmail,
+      to: [toEmail],
       replyTo: email,
       subject: `New consultation enquiry from ${fullname}`,
       text: [
@@ -125,13 +133,14 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      // The enquiry is saved even if email delivery fails.
+      // The enquiry has already been saved.
       console.error("Resend email error:", error);
 
       return NextResponse.json({
         success: true,
         emailSent: false,
-        message: "Your enquiry was received and saved.",
+        message:
+          "Your enquiry was saved, but the notification email could not be sent.",
       });
     }
 
