@@ -20,8 +20,6 @@ type FormData = {
   message: string;
 };
 
-type FormStatus = "idle" | "loading" | "success" | "error";
-
 const initialFormData: FormData = {
   fullname: "",
   email: "",
@@ -40,8 +38,13 @@ export default function ContactClientView() {
   const [formData, setFormData] = useState<FormData>({
     ...initialFormData,
   });
-  const [status, setStatus] = useState<FormStatus>("idle");
+
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailWarning, setEmailWarning] = useState("");
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -55,10 +58,9 @@ export default function ContactClientView() {
       [name]: value,
     }));
 
-    if (status !== "loading") {
-      setStatus("idle");
-      setErrorMessage("");
-    }
+    setStatus("idle");
+    setErrorMessage("");
+    setEmailWarning("");
   };
 
   const handleSubmit = async (
@@ -68,8 +70,54 @@ export default function ContactClientView() {
 
     if (status === "loading") return;
 
+    const cleanedData: FormData = {
+      fullname: formData.fullname.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      serviceInterest: formData.serviceInterest,
+      message: formData.message.trim(),
+    };
+
+    // Client-side checks for clearer feedback.
+    if (
+      cleanedData.fullname.length < 2 ||
+      cleanedData.fullname.length > 100
+    ) {
+      setStatus("error");
+      setErrorMessage("Please enter your full name.");
+      return;
+    }
+
+    if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedData.email) ||
+      cleanedData.email.length > 254
+    ) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid email address, such as name@example.com.");
+      return;
+    }
+
+    if (
+      cleanedData.phone.length < 7 ||
+      cleanedData.phone.length > 25
+    ) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid contact number.");
+      return;
+    }
+
+    if (
+      cleanedData.message.length < 5 ||
+      cleanedData.message.length > 5000
+    ) {
+      setStatus("error");
+      setErrorMessage("Please enter a message between 5 and 5000 characters.");
+      return;
+    }
+
     setStatus("loading");
     setErrorMessage("");
+    setEmailWarning("");
 
     try {
       const response = await fetch("/api/contact", {
@@ -77,24 +125,18 @@ export default function ContactClientView() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          fullname: formData.fullname.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          serviceInterest: formData.serviceInterest,
-          message: formData.message.trim(),
-        }),
+        body: JSON.stringify(cleanedData),
       });
 
       const data = await response.json().catch(() => null);
 
       if (!response.ok || !data?.success) {
-        const fieldErrors = data?.errors as
+        const errors = data?.errors as
           | Record<string, string>
           | undefined;
 
-        const firstFieldError = fieldErrors
-          ? Object.values(fieldErrors).find(
+        const firstFieldError = errors
+          ? Object.values(errors).find(
               (value) => typeof value === "string"
             )
           : undefined;
@@ -102,7 +144,7 @@ export default function ContactClientView() {
         setErrorMessage(
           firstFieldError ||
             data?.message ||
-            `Unable to submit your enquiry (HTTP ${response.status}). Please try again.`
+            `Submission failed (HTTP ${response.status}). Please try again.`
         );
 
         setStatus("error");
@@ -113,17 +155,17 @@ export default function ContactClientView() {
       setStatus("success");
 
       if (data.emailSent === false) {
-        setErrorMessage(
-          "Your enquiry has been saved, but the clinic notification email could not be sent."
+        setEmailWarning(
+          "Your enquiry has been saved, but the clinic notification email could not be sent. Please contact the clinic if your request is urgent."
         );
       }
     } catch (error) {
-      console.error("Contact form submission failed:", error);
+      console.error("Contact form request failed:", error);
 
-      setErrorMessage(
-        "Unable to connect to the server. Please check your internet connection and try again."
-      );
       setStatus("error");
+      setErrorMessage(
+        "Unable to connect to the server. Please check your connection and try again."
+      );
     }
   };
 
@@ -150,7 +192,6 @@ export default function ContactClientView() {
 
   return (
     <main className="w-full pb-16 text-stone-900 sm:pb-20 md:pb-24">
-      {/* Page heading */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="space-y-3 pb-8 pt-10 text-center sm:pb-10 sm:pt-14 md:pt-16">
           <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 sm:text-sm">
@@ -167,7 +208,6 @@ export default function ContactClientView() {
           </p>
         </div>
 
-        {/* Contact information */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {clinicInfo.map((info) => {
             const content = (
@@ -189,11 +229,7 @@ export default function ContactClientView() {
             );
 
             return info.href ? (
-              <a
-                key={info.label}
-                href={info.href}
-                className="block"
-              >
+              <a key={info.label} href={info.href}>
                 {content}
               </a>
             ) : (
@@ -203,11 +239,9 @@ export default function ContactClientView() {
         </div>
       </section>
 
-      {/* Image and enquiry form */}
       <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pt-20">
         <div className="grid grid-cols-1 items-start gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-14">
-          {/* Clinic image */}
-          <div className="space-y-6 lg:col-span-5">
+          <div className="lg:col-span-5">
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-100 sm:aspect-[3/4] sm:rounded-3xl">
               <Image
                 src="/contact.png"
@@ -235,7 +269,6 @@ export default function ContactClientView() {
             </div>
           </div>
 
-          {/* Contact form */}
           <div className="rounded-2xl border border-stone-200/80 bg-white p-5 sm:rounded-3xl sm:p-8 md:p-10 lg:col-span-7">
             <div className="mb-6 border-b border-stone-100 pb-5 sm:mb-8 sm:pb-6">
               <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-[#586454] sm:text-xs">
@@ -252,12 +285,7 @@ export default function ContactClientView() {
               </p>
             </div>
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-5"
-              noValidate={false}
-            >
-              {/* Name and email */}
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                 <div className="space-y-2">
                   <label htmlFor="fullname" className={labelClass}>
@@ -299,7 +327,6 @@ export default function ContactClientView() {
                 </div>
               </div>
 
-              {/* Phone and treatment */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                 <div className="space-y-2">
                   <label htmlFor="phone" className={labelClass}>
@@ -322,10 +349,7 @@ export default function ContactClientView() {
                 </div>
 
                 <div className="space-y-2">
-                  <label
-                    htmlFor="serviceInterest"
-                    className={labelClass}
-                  >
+                  <label htmlFor="serviceInterest" className={labelClass}>
                     Treatment Interest
                   </label>
 
@@ -356,7 +380,6 @@ export default function ContactClientView() {
                 </div>
               </div>
 
-              {/* Message */}
               <div className="space-y-2">
                 <label htmlFor="message" className={labelClass}>
                   How May We Assist You? *
@@ -365,7 +388,7 @@ export default function ContactClientView() {
                 <textarea
                   id="message"
                   name="message"
-                  rows={5}
+                  rows={4}
                   required
                   minLength={5}
                   maxLength={5000}
@@ -376,29 +399,23 @@ export default function ContactClientView() {
                 />
               </div>
 
-              {/* Submit button */}
-              <div className="pt-1">
-                <button
-                  type="submit"
-                  disabled={status === "loading"}
-                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#586454] px-7 py-3.5 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#485345] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                >
-                  {status === "loading"
-                    ? "Submitting..."
-                    : "Send Request"}
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#586454] px-7 py-3.5 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#485345] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+              >
+                {status === "loading" ? "Submitting..." : "Send Request"}
 
-                  {status === "loading" ? (
-                    <span
-                      className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <ArrowUpRight className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
+                {status === "loading" ? (
+                  <span
+                    aria-hidden="true"
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                  />
+                ) : (
+                  <ArrowUpRight className="h-4 w-4" />
+                )}
+              </button>
 
-              {/* Success message */}
               {status === "success" && (
                 <div
                   role="status"
@@ -407,19 +424,19 @@ export default function ContactClientView() {
                 >
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
 
-                  <p>
-                    Thank you. Your consultation enquiry has been received.
-                    Our clinic team will reach out to you within 24 hours.
-                    {errorMessage && (
-                      <span className="mt-2 block text-amber-800">
-                        {errorMessage}
-                      </span>
+                  <div>
+                    <p>
+                      Thank you. Your consultation enquiry has been received.
+                      Our clinic team will reach out within 24 hours.
+                    </p>
+
+                    {emailWarning && (
+                      <p className="mt-2 text-amber-800">{emailWarning}</p>
                     )}
-                  </p>
+                  </div>
                 </div>
               )}
 
-              {/* Error message */}
               {status === "error" && (
                 <div
                   role="alert"
@@ -427,7 +444,6 @@ export default function ContactClientView() {
                   className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900"
                 >
                   <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
-
                   <p>{errorMessage}</p>
                 </div>
               )}
